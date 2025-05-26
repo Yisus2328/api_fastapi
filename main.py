@@ -10,7 +10,7 @@ import MySQLdb
 
 # codigo para iniciar la app - debe estar en el cd fastapi
 # venv\Scripts\activate
-# uvicorn main:app --reload --port 8001
+# uvicorn main:app --reload --port 8001 o py -m uvicorn main:app --reload --port 8001
 # http://127.0.0.1:8001/producto/ - se debe cargar si o si esta ruta - para cargar todos los productos de la BD
 # http://127.0.0.1:8001/producto/P001 se debe cargar si o si esta ruta - para cargar producto por el I
 # http://127.0.0.1:8001/producto/agregar_prod se debe cargar si o si esta ruta  y agregar desde postman
@@ -105,16 +105,18 @@ def agregar_producto(
     marca: str = Body(...),
     categoria: str = Body(...),
     stock: int = Body(...),
-    descripcion: str | None = Body(default=None)
+    descripcion: str | None = Body(default=None),
+    imagen_url: str | None = Body(default=None) 
 ):
     try:
         cone = get_conexion()
         if cone:
             cursor = cone.cursor()
+            
             cursor.execute("""
-                INSERT INTO producto (id_producto, nombre, descripcion, precio, marca, categoria, stock)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (id_producto, nombre, descripcion, precio, marca, categoria, stock))
+                INSERT INTO producto (id_producto, nombre, descripcion, precio, marca, categoria, stock, imagen_url)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (id_producto, nombre, descripcion, precio, marca, categoria, stock, imagen_url)) 
             cone.commit()
             cursor.close()
             cone.close()
